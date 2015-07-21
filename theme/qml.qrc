@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/theme/">
+        <file>BackGround.qml</file>
+        <file>BackPage.qml</file>
+        <file>ContentArea.qml</file>
+        <file>Footer.qml</file>
+        <file>FrontPage.qml</file>
+        <file>Header.qml</file>
+    </qresource>
+</RCC>

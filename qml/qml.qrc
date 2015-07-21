@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Pages.qml</file>
+        <file>qml/presentation.qml</file>
+        <file>qml/NestedList.qml</file>
+        <file>qml/Slide.qml</file>
+        <file>qml/Style.qml</file>
+        <file>qml/qmldir</file>
+        <file>qml/StyleText.qml</file>
+    </qresource>
+</RCC>
