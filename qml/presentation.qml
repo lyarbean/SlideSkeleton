@@ -6,16 +6,22 @@ import "."
 
 ApplicationWindow {
     id: theWindow
-    title: qsTr("CMake, the easy way")
-    width: 840
-    height: 525
+    title: qsTr("Slide")
+    function scaleView() {
+        var w = width / 840;
+        var h = height / 525;
+        var s = Math.max(0.4, Math.min(w, h));
+        theView.scale = s;
+    }
+    onWidthChanged: scaleView();
+    onHeightChanged: scaleView();
+
+
     visible: true
     Python {
         id: py // renderCode.py
         Component.onCompleted: {
-            // Add the directory of this .qml file to the search path
             addImportPath(Qt.resolvedUrl('/'));
-            // Import the main module and load the data
             importModule_sync('renderCode')
         }
     }
@@ -56,9 +62,12 @@ ApplicationWindow {
 
     StackView {
         id: theView
+        width: 840
+        height: 525
         antialiasing: true
         smooth: true
         focus: true
+        transformOrigin: Item.TopLeft
         Keys.onEscapePressed: {
             if (theWindow.visibility === Window.FullScreen) {
                 theWindow.showNormal()
