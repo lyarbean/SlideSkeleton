@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>renderCode.py</file>
+    </qresource>
+</RCC>

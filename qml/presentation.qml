@@ -14,7 +14,7 @@ ApplicationWindow {
         id: py // renderCode.py
         Component.onCompleted: {
             // Add the directory of this .qml file to the search path
-            addImportPath(Qt.resolvedUrl('assets'));
+            addImportPath(Qt.resolvedUrl('/'));
             // Import the main module and load the data
             importModule_sync('renderCode')
         }

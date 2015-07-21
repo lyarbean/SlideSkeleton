@@ -1,6 +1,4 @@
 import QtQuick 2.3
-import "../theme"
-
 Rectangle {
     color : "white"
     property string headline : ""

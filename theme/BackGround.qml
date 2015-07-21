@@ -1,5 +1,4 @@
 import QtQuick 2.3
-import "../qml"
 import "."
 Item {
     x: parent.x + parent.width * 0.85

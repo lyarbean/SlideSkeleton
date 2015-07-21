@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/theme/">
+    <qresource prefix="/">
         <file>BackGround.qml</file>
         <file>BackPage.qml</file>
         <file>ContentArea.qml</file>

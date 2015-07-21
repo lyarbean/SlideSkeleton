@@ -1,7 +1,5 @@
 import QtQuick 2.0
-import "../qml"
 import "."
-
 Rectangle {
     property string presenterName : ""
     property string functionString : ""
