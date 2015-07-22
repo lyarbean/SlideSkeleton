@@ -11,6 +11,7 @@ ApplicationWindow {
     property int slideWidth: 480 //640
     property int slideHeight: 360 //480
 
+    // FIXME
     function scaleViewport() {
         var s;
         if (theWindow.width * slideHeight > theWindow.height * slideWidth) {
@@ -29,8 +30,6 @@ ApplicationWindow {
         scaleViewport()
     }
 
-
-
     Python {
         id: py // renderCode.py
         Component.onCompleted: {
@@ -41,7 +40,7 @@ ApplicationWindow {
 
     // TODO Rename id
     Pages {
-        id: theModel
+        id: thePages
     }
 
     // For navigation
@@ -49,15 +48,15 @@ ApplicationWindow {
     property int previousIndex: 0
     property int printPageIndex: 0
     Component.onCompleted: {
-        theView.push(Qt.resolvedUrl(theModel.get(0).ref)).focus = true
+        theView.push(Qt.resolvedUrl(thePages.get(0).ref)).focus = true
         //theWindow.showFullScreen()
         visible = true
     }
 
     function nextPage() {
-        if (currentIndex < theModel.count - 1) {
+        if (currentIndex < thePages.count - 1) {
             currentIndex++
-            theView.push(Qt.resolvedUrl(theModel.get(currentIndex).ref)).focus = true
+            theView.push(Qt.resolvedUrl(thePages.get(currentIndex).ref)).focus = true
         }
     }
 
@@ -70,7 +69,7 @@ ApplicationWindow {
         }
         while (idx > currentIndex) {
             currentIndex++
-            theView.push(Qt.resolvedUrl(theModel.get(currentIndex).ref)).focus = true
+            theView.push(Qt.resolvedUrl(thePages.get(currentIndex).ref)).focus = true
         }
     }
 
@@ -105,9 +104,9 @@ ApplicationWindow {
                 }
                 case Qt.Key_Right:
                 case Qt.Key_Return: {
-                    if (currentIndex < theModel.count - 1) {
+                    if (currentIndex < thePages.count - 1) {
                         currentIndex++
-                        theView.push(Qt.resolvedUrl(theModel.get(currentIndex).ref)).focus = true
+                        theView.push(Qt.resolvedUrl(thePages.get(currentIndex).ref)).focus = true
                         event.accepted = true
                     }
                     break;
@@ -123,15 +122,15 @@ ApplicationWindow {
                     break;
                 } 
                 case Qt.Key_Menu: {
-                    navigator.visible = !navigator.visible
+                    //previewBox.visible = !previewBox.visible
                     event.accepted = true
                     break;
                 }
                 case Qt.Key_Meta: {
-                    if (event.modifiers & Qt.AltModifier) {
-                        noteEdit.visible = !noteEdit.visible
-                        event.accepted = true
-                    }
+                    //if (event.modifiers & Qt.AltModifier) {
+                    //    noteEdit.visible = !noteEdit.visible
+                    //    event.accepted = true
+                    //}
                     break;
                 }
                 case Qt.Key_P: {
@@ -151,162 +150,158 @@ ApplicationWindow {
             }
         }
     }
-    Rectangle {
-        id: noteEdit
-        y: parent.height * 0.65
-        x: parent.width * 0.15
-        height: parent.height * 0.3
-        width: parent.width * 0.85
-        visible: false
-        focus: true
-        color: "white"
-        property alias text: noteText.text
-        Rectangle {
-            color: "orange"
-            opacity: 0.3
-            anchors.fill: parent
-            MouseArea {
-                anchors.fill: parent
-                drag.target: noteEdit
-                onEntered: {
-                    theView.currentItem.focus = true
-                }
-            }
-        }
-        ScrollView {
-            anchors.fill: parent
-            frameVisible: true
-            highlightOnFocus: true
-            TextEdit {
-                id: noteText
-                text: "Note"
-                font.pointSize: theView.width / 60
-                color: "black"
-                selectByMouse: true
-                cursorVisible: true
-                cursorDelegate: Rectangle {
-                    width: noteText.font.pointSize / 3
-                    color: "red"
-                }
-                Keys.onReleased: {
-                    if ((event.modifiers & Qt.AltModifier) && (event.key === Qt.Key_Meta)) {
-                        noteEdit.visible = false
-                        theView.currentItem.focus = true
-                        event.accepted = true
-                    }
-                }
-            }
-        }
-    }
+//    Rectangle {
+//        id: noteEdit
+//        y: parent.height * 0.65
+//        x: parent.width * 0.15
+//        height: parent.height * 0.3
+//        width: parent.width * 0.85
+//        visible: false
+//        focus: true
+//        color: "white"
+//        property alias text: noteText.text
+//        Rectangle {
+//            color: "orange"
+//            opacity: 0.3
+//            anchors.fill: parent
+//            MouseArea {
+//                anchors.fill: parent
+//                drag.target: noteEdit
+//                onEntered: {
+//                    theView.currentItem.focus = true
+//                }
+//            }
+//        }
+//        ScrollView {
+//            anchors.fill: parent
+//            frameVisible: true
+//            highlightOnFocus: true
+//            TextEdit {
+//                id: noteText
+//                text: "Note"
+//                font.pointSize: theView.width / 60
+//                color: "black"
+//                selectByMouse: true
+//                cursorVisible: true
+//                cursorDelegate: Rectangle {
+//                    width: noteText.font.pointSize / 3
+//                    color: "red"
+//                }
+//                Keys.onReleased: {
+//                    if ((event.modifiers & Qt.AltModifier) && (event.key === Qt.Key_Meta)) {
+//                        noteEdit.visible = false
+//                        theView.currentItem.focus = true
+//                        event.accepted = true
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     // Navigator with preview support
-    Rectangle {
-        id: previewBox
-        height: parent.height * 0.3
-        width: parent.width * 0.3
-        y: parent.height * 0.68 - 80
-        x: parent.width * 0.1
-        visible: navigator.visible
-        property alias box: box
-        color: "#ffffff"
-        border {
-            width: height * 0.05
-            color: "steelblue"
-        }
-        radius: height * 0.05
-        Rectangle {
-            id: box
-            width: parent.width - parent.height * 0.1
-            height: parent.height* 0.9
-            x: parent.height* 0.05
-            y: parent.height* 0.05
-        }
-    }
-    Loader {
-        id: preview
-        parent: previewBox.box
-        visible: previewBox.visible
-        anchors.fill: parent
-        asynchronous: false
-        onSourceChanged: {
-            if (item !== null) {
-            }
-        }
-        enabled: false
-    }
-
-    Rectangle {
-        z: 999
-        id: navigator
-        focus: true
-        height: 50
-        width: parent.width * 0.9
-        visible: false
-        onVisibleChanged: {
-            if (visible) {
-                theList.currentIndex = currentIndex
-            }
-        }
-
-        y: parent.height - 75
-        color: "#00ffffff"
-        ListView {
-            id: theList
-            model: theModel
-            orientation: ListView.Horizontal
-            anchors.fill: parent
-            header: Rectangle {
-                width: 50
-                height: 50
-                radius: 25
-                color: "orange"
-                Rectangle {
-                    x: 25
-                    width: 25
-                    height: 50
-                    color: "orange"
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: navigator.visible = false
-                }
-            }
-            delegate: Rectangle {
-                id: box
-                color: "white"
-                width: 50
-                height: 50
-                border {
-                    width: 2
-                    color: "orange"
-                }
-                radius: 4
-                Text {
-                    id: page
-                    anchors {
-                        margins: 3
-                        centerIn: parent
-                    }
-                    font.pointSize: 24
-                    text: index
-                    color: "steelblue"
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        navigator.visible = false
-                        jumpToIndex(index)
-                    }
-                    hoverEnabled: true
-                    onHoveredChanged: {
-                        box.color = containsMouse ? "orange" : "white"
-                        page.color = containsMouse ? "black" : "steelblue"
-                    }
-                    onEntered: {
-                        preview.source = ref
-                    }
-                }
-            }
-        }
-    }
+//    Rectangle {
+//        id: previewBox
+//        parent: theView
+//        visible: false
+//        height: 90 
+//        width: 120
+//        radius: 2
+//        y: 220 // TODO
+//        x: 20
+//        z: 999
+//        color: "#ffffff"
+//        border {
+//            width: 2
+//            color: "steelblue"
+//        }
+//       
+//        Rectangle {
+//            id: box
+//            width: 50
+//            height: 90
+//            y: 10
+//            Loader {
+//                id: preview
+//                anchors.fill: parent
+//                asynchronous: false
+//                onSourceChanged: {
+//                    if (item !== null) {
+//                    }
+//                }
+//                enabled: false
+//            }
+//        }
+//        Rectangle {
+//            id: navigator
+//            focus: true
+//            height: 50
+//            width: parent.with * 0.9
+//            visible: false
+//            onVisibleChanged: {
+//                if (visible) {
+//                    theList.currentIndex = currentIndex
+//                }
+//            }
+//
+//            y: parent.height - 75
+//            color: "#00ffffff"
+//            ListView {
+//                id: theList
+//                model: thePages
+//                orientation: ListView.Horizontal
+//                anchors.fill: parent
+//                header: Rectangle {
+//                    width: 50
+//                    height: 50
+//                    radius: 25
+//                    color: "orange"
+//                    Rectangle {
+//                        x: 25
+//                        width: 25
+//                        height: 50
+//                        color: "orange"
+//                    }
+//                    MouseArea {
+//                        anchors.fill: parent
+//                        onClicked: previewBox.visible = false
+//                    }
+//                }
+//                delegate: Rectangle {
+//                    id: box
+//                    color: "white"
+//                    width: 50
+//                    height: 50
+//                    border {
+//                        width: 2
+//                        color: "orange"
+//                    }
+//                    radius: 4
+//                    Text {
+//                        id: page
+//                        anchors {
+//                            margins: 3
+//                            centerIn: parent
+//                        }
+//                        text: index
+//                        color: "steelblue"
+//                    }
+//                    MouseArea {
+//                        anchors.fill: parent
+//                        onClicked: {
+//                            previewBox.visible = false
+//                            jumpToIndex(index)
+//                        }
+//                        hoverEnabled: true
+//                        onHoveredChanged: {
+//                            box.color = containsMouse ? "orange" : "white"
+//                            page.color = containsMouse ? "black" : "steelblue"
+//                        }
+//                        onEntered: {
+//                            preview.source = ref
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
