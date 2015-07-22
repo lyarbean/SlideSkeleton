@@ -3,11 +3,7 @@ import "."
 ListModel {
     ListElement {
         name: "Sample"
-        ref: "pages/from_page.qml"
-    }
-    ListElement {
-        name: "Agenda"
-        ref: "pages/agenda.qml"
+        ref: "pages/example.qml"
     }
     // More pages come following
 }
