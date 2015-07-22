@@ -7,11 +7,12 @@ Item {
     height: parent.height * 0.15
     focus: true
     Column {
+        anchors.horizontalCenter: parent.horizontalCenter
         spacing: 2
         Text {
             text: headline
             color: Style.dBlue
-            font.pointSize: largeFontSize
+            font.pointSize: bigFontSize
         }
         Text {
             text: subHeadline

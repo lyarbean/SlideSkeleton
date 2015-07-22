@@ -7,17 +7,30 @@ import "."
 ApplicationWindow {
     id: theWindow
     title: qsTr("Slide")
-    function scaleView() {
-        var w = width / 840;
-        var h = height / 525;
-        var s = Math.max(0.4, Math.min(w, h));
-        theView.scale = s;
+
+    property int slideWidth: 480 //640
+    property int slideHeight: 360 //480
+
+    function scaleViewport() {
+        var s;
+        if (theWindow.width * slideHeight > theWindow.height * slideWidth) {
+            s = theWindow.height / slideHeight;
+        } else {
+            s = theWindow.width / slideWidth;
+        }
+        if (Math.abs (s - theView.scale) > 0.1) {
+            theView.scale = s
+        }
     }
-    onWidthChanged: scaleView();
-    onHeightChanged: scaleView();
+    onWidthChanged: {
+        scaleViewport()
+    }
+    onHeightChanged: {
+        scaleViewport()
+    }
 
 
-    visible: true
+
     Python {
         id: py // renderCode.py
         Component.onCompleted: {
@@ -37,7 +50,8 @@ ApplicationWindow {
     property int printPageIndex: 0
     Component.onCompleted: {
         theView.push(Qt.resolvedUrl(theModel.get(0).ref)).focus = true
-        theWindow.showFullScreen()
+        //theWindow.showFullScreen()
+        visible = true
     }
 
     function nextPage() {
@@ -62,8 +76,10 @@ ApplicationWindow {
 
     StackView {
         id: theView
-        width: 840
-        height: 525
+        Component.onCompleted: {
+            width = slideWidth
+            height = slideHeight
+        }
         antialiasing: true
         smooth: true
         focus: true

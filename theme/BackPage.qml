@@ -4,9 +4,6 @@ import "."
 Rectangle {
     color: "white"
 
-    // PixelSize ~= PointSize * fScale
-    property real fontScale: Math.min(width / 840, height / 525 )
-    onFontScaleChanged: hugeFontSize = 32 * fontScale
     property real hugeFontSize: 32
 
     Text {
