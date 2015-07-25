@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>Pages.qml</file>
         <file>presentation.qml</file>
         <file>NestedList.qml</file>
         <file>Slide.qml</file>
